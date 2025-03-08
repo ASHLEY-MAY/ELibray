@@ -31,7 +31,10 @@
                     <span class="error">{{ message }}</span>
                 {% endif %}
             {% endfor %}
+<<<<<<< HEAD
             <input type="date" name="birthday" id="birthday" placeholder="Birthday" required>
+=======
+>>>>>>> 6589c5f2e976b08e038f850fa79118d2d48754aa
             <input type="email" id="email" name='email' placeholder="Email" value=
             "{{ request.form['email'] }}"required>
             <label for="gender" value="{{ request.form['gender'] }}"required >
@@ -40,6 +43,10 @@
                 <input type="radio" name="gender" value="others"> Others
                 <input type="radio" name="gender" value="prefernottosay"> Prefer not to say
             </label>
+<<<<<<< HEAD
+=======
+            <input type="date" name="birthday" id="birthday" placeholder="Birthday" required>
+>>>>>>> 6589c5f2e976b08e038f850fa79118d2d48754aa
             <input type="password" id="password" name="password" placeholder="Password" required>
             {% for category, message in get_flashed_messages(with_categories=true) %}
                 {% if category == 'errorpass' %}

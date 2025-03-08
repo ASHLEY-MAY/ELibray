@@ -45,15 +45,24 @@ def validate_pass(password, min_length=3):
     if len(password) < min_length:
         flash(f'Password must be at least {min_length} characters long.', 'errorpass')
         return False
+<<<<<<< HEAD
     if (re.search(r"[A-Z]", password) and
         re.search(r"\d", password) and
         re.search(r'[!@#$%^&*(),.?":{}|<>]', password)):
         return True
     flash('Password must contain at least one uppercase letter, one number, and one special character.', 'errorpass')
+=======
+    if (re.search(r"[A-Z]", password) or
+        re.search(r"\d", password) or
+        re.search(r'[!@#$%^&*(),.?":{}|<>]', password)):
+        return True
+    flash('Password must contain at one of the following: at least one uppercase letter, one number, or one special character.', 'errorpass')
+>>>>>>> 6589c5f2e976b08e038f850fa79118d2d48754aa
     return False
 
 auth = Blueprint('auth', __name__, template_folder='blueprint/template', static_folder='blueprint/static')
 
+<<<<<<< HEAD
 @auth.route('/login', methods = ['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -71,6 +80,42 @@ def login():
                 return render_template('home.html')
             else:
                 flash('Invalid Credentials', 'error')
+=======
+@auth.route('/login', methods=['GET', 'POST'])
+def login():
+    if 'log' in session:
+        return render_template('home.html')
+    
+    if request.method == 'POST':
+        username = request.form['user_id']
+        password = request.form['password']
+        
+        admin_user = "ELUA101"
+        admin_pass = "njsamiacortezanoashley"
+
+        cursor = current_app.mysql.connection.cursor()
+        cursor.execute("SELECT * FROM user_account WHERE user_id = %s", (username,))
+        user = cursor.fetchone()
+        cursor.close()
+        try:
+            if username == admin_user and password == admin_pass:
+                session['log'] = True
+                session['username'] = username
+                session['user_id'] = username  # Assuming admin user_id is the same as username
+                return render_template('admin/admin_dashboard.html') 
+            if user and check_password_hash(user[2], password):
+                session['log'] = True
+                session['username'] = username
+                session['user_id'] = user[0]
+                return render_template('home.html')
+            else:
+                flash('Invalid Credentials', 'error')
+                return render_template('login.html')
+        except Exception as e:
+                current_app.mysql.connection.rollback()
+                flash(f'An unexpected error occurred: {str(e)}', 'error')
+        finally:
+>>>>>>> 6589c5f2e976b08e038f850fa79118d2d48754aa
             cursor.close()
 
     return render_template('login.html')
@@ -86,13 +131,22 @@ def register():
         birthday = request.form['birthday']
         password = request.form['password']
         repassword = request.form['repassword']
+<<<<<<< HEAD
 
         cursor = current_app.mysql.connection.cursor()
 
+=======
+        hashed_password = generate_password_hash(password)
+
+        cursor = current_app.mysql.connection.cursor()
+
+        # Check if the email already exists
+>>>>>>> 6589c5f2e976b08e038f850fa79118d2d48754aa
         cursor.execute('SELECT * FROM user_profile WHERE email = %s', (email,))
         existing_email = cursor.fetchone()
 
         if existing_email:
+<<<<<<< HEAD
             flash('Email is already use! Try another one', 'error')
             return render_template('register.html')
         else:
@@ -118,6 +172,35 @@ def register():
                 try:
                     hashed_password = generate_password_hash(password)
                     cursor.callproc('userID ', (fn, mn, ln, email, gender, birthday, hashed_password))
+=======
+            flash('Email is already in use! Try another one.', 'error')
+        else:
+            # Validate user input
+            if (validate_fn(fn) and validate_mn(mn) and validate_ln(ln) and
+                validate_email(email) and validate_pass(password) and
+                password == repassword):  # Fixed the condition here
+
+                try:
+                    # Count existing users to generate a new user ID
+                    cursor.execute('SELECT COUNT(*) FROM USER_PROFILE')
+                    user_count = cursor.fetchone()[0]
+
+                    # Generate a new user ID
+                    new_user_id = f'ELU-{str(user_count + 1).zfill(3)}'
+
+                    # Insert the new user into USER_PROFILE
+                    cursor.execute('''
+                        INSERT INTO USER_PROFILE (user_id, first_name, middle_name, last_name, email, gender, birthday)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    ''', (new_user_id, fn, mn, ln, email, gender, birthday))
+
+                    # Insert the new user into USER_ACCOUNT
+                    cursor.execute('''
+                        INSERT INTO USER_ACCOUNT (user_id, password)
+                        VALUES (%s, %s)
+                    ''', (new_user_id, hashed_password))
+
+>>>>>>> 6589c5f2e976b08e038f850fa79118d2d48754aa
                     current_app.mysql.connection.commit()
                     flash('Registered successfully! Please login.', 'success')
                     return render_template('login.html')
@@ -129,6 +212,11 @@ def register():
                     flash(f'An unexpected error occurred: {str(e)}', 'error')
                 finally:
                     cursor.close()
+<<<<<<< HEAD
+=======
+            else:
+                flash('Please ensure all fields are valid and passwords match.', 'error')
+>>>>>>> 6589c5f2e976b08e038f850fa79118d2d48754aa
 
     return render_template('register.html')
 
@@ -136,3 +224,10 @@ def register():
 def forget():
     return render_template('forget.html')
 
+<<<<<<< HEAD
+=======
+@auth.route('/base')
+def base():
+    return render_template('base.html')
+
+>>>>>>> 6589c5f2e976b08e038f850fa79118d2d48754aa

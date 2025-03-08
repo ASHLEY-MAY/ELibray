@@ -87,7 +87,11 @@ BEGIN
 
     SET new_user_id = CONCAT('ELU-', LPAD(user_count + 1, 3, '0'));
 
+<<<<<<< HEAD
     INSERT INTO USER_PROFILE (user_id, first_name, middle_name, last_name, email, age, birthday)
+=======
+    INSERT INTO USER_PROFILE (user_id, first_name, middle_name, last_name, email, sex, birthday)
+>>>>>>> 6589c5f2e976b08e038f850fa79118d2d48754aa
     VALUES (new_user_id, p_first_name, p_middle_name, p_last_name, p_email, p_sex, p_birthday);
 
     INSERT INTO USER_ACCOUNT (user_id, password)
