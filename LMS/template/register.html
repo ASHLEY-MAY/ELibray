@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+</head>
+
+<body>
+    <form action="{{url_for('auth.register')}}" method="POST">
+        <h1>Registration</h1>
+        <div>
+            <h5>Have an account? <a href="{{url_for('auth.login')}}">Login</a></h5>
+            <input type="text" id="fn" name="first_name" placeholder="First Name" value="{{ request.form['first_name'] }}" required>
+            {% for category, message in get_flashed_messages(with_categories=true) %}
+                {% if category == 'errorfn' %}
+                    <span class="error">{{ message }}</span>
+                {% endif %}
+            {% endfor %}
+            <input type="text" id="md" name="middle_name" placeholder="Middle Name (optional)" value=
+            "{{ request.form['middle_name'] }}">
+            {% for category, message in get_flashed_messages(with_categories=true) %}
+                {% if category == 'errormd' %}
+                    <span class="error">{{ message }}</span>
+                {% endif %}
+            {% endfor %}
+            <input type="text" id="ln" name="last_name" placeholder="Last Name" value="{{ request.form['last_name'] }}"required>
+            {% for category, message in get_flashed_messages(with_categories=true) %}
+                {% if category == 'errorln' %}
+                    <span class="error">{{ message }}</span>
+                {% endif %}
+            {% endfor %}
+            <input type="date" name="birthday" id="birthday" placeholder="Birthday" required>
+            <input type="email" id="email" name='email' placeholder="Email" value=
+            "{{ request.form['email'] }}"required>
+            <label for="gender" value="{{ request.form['gender'] }}"required >
+                <input type="radio" name="gender" value="male"> Male
+                <input type="radio" name="gender" value="female"> Female
+                <input type="radio" name="gender" value="others"> Others
+                <input type="radio" name="gender" value="prefernottosay"> Prefer not to say
+            </label>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            {% for category, message in get_flashed_messages(with_categories=true) %}
+                {% if category == 'errorpass' %}
+                    <span class="error">{{ message }}</span>
+                {% endif %}
+            {% endfor %}
+            <input type="password" id="repassword" name="repassword" placeholder="Confirm Password" required>
+            {% for category, message in get_flashed_messages(with_categories=true) %}
+                {% if category == 'error' %}
+                    <span class="error">{{ message }}</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <button type="submit" value="submit">Register</button>
+    </form>
+</body>
+
+</html>
